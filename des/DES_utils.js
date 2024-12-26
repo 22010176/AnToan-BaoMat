@@ -31,7 +31,7 @@ function F(r = new _32BinaryData(), key = new _48BinaryData()) {
 }
 
 function enscriptionBlock(block = new _64BinaryData(), keys = []) {
-  if (keys.length !== 16) throw new Error('enscriptionBlock: keys must be 16')
+  if (keys.length !== 16) throw new Error(`enscriptionBlock: keys must be 16. Got ${block.length}`)
 
   const _ip = IP.map(block.data)
   const [L0, R0] = devideIntoBlocks(_ip, 32).map(block => new _32BinaryData(block))
@@ -45,5 +45,7 @@ function enscriptionBlock(block = new _64BinaryData(), keys = []) {
 
   return new _64BinaryData(FP.map(R.data + L.data))
 }
+
+
 
 module.exports = { enscriptionBlock, generateKeys }

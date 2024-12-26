@@ -54,19 +54,17 @@ const hexConverter = new Converter(
   }
 )
 
-function enscript(message = '', key = '', converter = defaultConverter) {
+function enscript(message = '', key = '', converter = defaultConverter, mode = 'encript') {
   const binaryMessage = devideIntoBlocks(converter.toBinary(message), 64).map(block => new _64BinaryData(block.padEnd(64, '0')))
   const binaryKey = new _64BinaryData(converter.toBinary(key).padEnd(64, '0'))
 
   const keys = generateKeys(binaryKey)
 
-  return converter.toChar(binaryMessage.map(block => enscriptionBlock(block, keys).data).join(''))
+  if (mode === 'encript') return converter.toChar(binaryMessage.map(block => enscriptionBlock(block, keys).data).join(''))
+  else if (mode === 'decript') return converter.toChar(binaryMessage.map(block => enscriptionBlock(block, keys.reverse()).data).join(''))
 }
 
 
-function descript() {
-
-}
 
 
 // const key = "133457799BBCDFF1"
@@ -77,12 +75,11 @@ function descript() {
 
 // Define DES key and plaintext
 const k = "012333ef";
-const m = "Hello, world!";
+const m = "1234567890";
 
-
-const temp = enscript(m, k, defaultConverter)
-
-console.log(temp)
+const temp = enscript(m, k, hexConverter)
+const des = enscript(temp, k, hexConverter, 'decript')
+console.log(temp, des, m)
 // // Perform DES encryption
 // const des = new DES(key);
 // const ciphertext = des.encrypt(plaintext);
