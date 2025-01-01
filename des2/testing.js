@@ -40,8 +40,11 @@ function TestMappingBinary() {
   const result = MappingBit(binary, table)
   console.log({ table, binary, result })
 }
-TestGenerateKey()
 
 // const data = '1234567890'
 // const shift = 2;
 // console.log(data.slice(shift) + data.slice(0, shift))
+
+module.exports = {
+  generateSuffleArray, generateRandomBinaryString
+}

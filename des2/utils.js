@@ -26,39 +26,43 @@ function GenerateKey(key = '') {
   CheckBinaryString(key)
   CheckLength(key, 64)
 
-  console.log(key)
   const p1 = MappingBit(key, PermutedChoice1);
-  console.table(p1.split(''))
 
-  // let [c, d] = BinaryData.DivideIntoBlocks(p1, 28)
+  let [c, d] = BinaryData.DivideIntoBlocks(p1, 28)
 
-  // const result = []
-  // for (let i = 0; i < 16; ++i) {
-  //   [c, d] = [c, d].map(i => BinaryData.CircularShiftLeft(i, KeyShifts[i]))
-  //   // console.log(c, d)
-  //   result.push(MappingBit(c + d, PermutedChoice2))
-  // }
-  // return result;
+  const result = []
+  for (let i = 0; i < 16; ++i) {
+    [c, d] = [c, d].map(i => BinaryData.CircularShiftLeft(i, KeyShifts[i]))
+    result.push(MappingBit(c + d, PermutedChoice2))
+  }
+  return result;
+}
+
+function FBlock(data, key) {
+  const exp = MappingBit(data, ExpansionTable)
+  const xor = BinaryData.Xor(exp, key);
+
+  const x = BinaryData.DivideIntoBlocks(xor, 6)
+    .map((i, j) => SBoxes[j][parseInt(i[0] + i[5], 2)][parseInt(i.slice(1, 5), 2)].toString(2).padStart(4, 0));
+  // console.log(x.length)
+  return MappingBit(x, PermutationTable)
+}
+
+function EnscriptBlock(data = '', keys = []) {
+  const ip = MappingBit(data, InitialPermutation)
+
+  let [r, l] = BinaryData.DivideIntoBlocks(ip, 32)
+  for (let i = 0; i < 16; ++i) {
+    let temp = r;
+    r = BinaryData.Xor(FBlock(r, keys[i]), l)
+    l = temp;
+  }
+
+  return MappingBit(r + l, FinalPermutation)
 }
 
 
-
-
-
-
-function EnscriptBlock(data = '', key = '') {
-  CheckBinaryString(data);
-  CheckBinaryString(key);
-  CheckLength(data, 64)
-  CheckLength(key, 64)
-
-  const ip = MappingBit(data, _IP)
-  const keys = GenerateKey(key)
-
-
-
-}
 
 module.exports = {
-  MappingBit, CheckLength, GenerateKey
+  MappingBit, CheckLength, GenerateKey, EnscriptBlock
 }
