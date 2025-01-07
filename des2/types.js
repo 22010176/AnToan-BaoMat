@@ -77,7 +77,7 @@ class BinaryData {
 
   static HexToBinary(message) {
     return message.split('').map(i => {
-      switch (i) {
+      switch (i.toLowerCase()) {
         case '0': return '0000'
         case '1': return '0001'
         case '2': return '0010'
@@ -99,12 +99,16 @@ class BinaryData {
     }).join('')
   }
 
-  static DebugBinary(message) {
-    console.log(this.DivideIntoBlocks(message, 4).join(' '))
+  static DebugBinary(message, hex = true) {
+    if (hex) return this.DebugHex(this.BinaryToHex(message))
+
+    const test = this.DivideIntoBlocks(message, 4).join(' ')
+    return test
   }
 
   static DebugHex(message) {
-    console.log(this.DivideIntoBlocks(message, 2).join(' '))
+    const test = this.DivideIntoBlocks(message, 2).join(' ');
+    return test;
   }
   // #data;
 

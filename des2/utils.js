@@ -32,10 +32,17 @@ function GenerateKey(key = '') {
 
   const result = []
   for (let i = 0; i < 16; ++i) {
-    [c, d] = [c, d].map(i => BinaryData.CircularShiftLeft(i, KeyShifts[i]))
+    [c, d] = [c, d].map(j => BinaryData.CircularShiftLeft(j, KeyShifts[i]))
     result.push(MappingBit(c + d, PermutedChoice2))
   }
   return result;
+}
+
+function getSbox(message = '') {
+  CheckBinaryString(message)
+  CheckLength(message, 6)
+
+
 }
 
 function FBlock(data, key) {
@@ -62,6 +69,18 @@ function EnscriptBlock(data = '', keys = []) {
 }
 
 
+const key = '13345799BBCDDFFA'
+
+const message = '13345799BBCDDFFA'
+
+const binaryKey = BinaryData.HexToBinary(key)
+console.log(binaryKey.length)
+const binaryMessage = BinaryData.HexToBinary(message)
+
+
+const keys = GenerateKey(binaryKey)
+BinaryData.DebugHex(key)
+keys.map(i => BinaryData.DebugHex(BinaryData.BinaryToHex(i)))
 
 module.exports = {
   MappingBit, CheckLength, GenerateKey, EnscriptBlock
